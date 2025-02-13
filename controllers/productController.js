@@ -31,11 +31,6 @@ exports.addProduct = async (req, res) => {
             image: imagesUrl,
             date: new Date() 
         };
-
-       
-        console.log(
-            productData
-        );
         const newProduct = new products(productData)
         await newProduct.save()
         res.status(201).json({ success: true, message: "product added" })

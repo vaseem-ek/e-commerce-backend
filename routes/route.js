@@ -3,6 +3,7 @@ const usersController=require('../controllers/userController')
 const productCotroller=require('../controllers/productController')
 const multer=require('../middlewares/multer')
 const jwtMiddle=require('../middlewares/jwtMiddle')
+const cartController=require('../controllers/cartController')
 
 
 const router=express.Router()
@@ -14,6 +15,10 @@ router.post('/add-product',jwtMiddle,multer.fields([{name:'image1',maxCount:1},{
 router.get('/list-product',productCotroller.listProduct)
 router.delete('/remove-product/:sid',jwtMiddle,productCotroller.removeProduct)
 router.get('/single-product/:sid',productCotroller.singleProduct)
+
+router.post('/add-cart',jwtMiddle,cartController.addCart)
+router.post('/get-cart',jwtMiddle,cartController.getCart)
+router.post('/update-cart',jwtMiddle,cartController.updateCart)
 
 
 module.exports=router
