@@ -17,7 +17,7 @@ router.delete('/remove-product/:sid',jwtMiddle,productCotroller.removeProduct)
 router.get('/single-product/:sid',productCotroller.singleProduct)
 
 router.post('/add-cart',jwtMiddle,cartController.addCart)
-router.post('/get-cart',jwtMiddle,cartController.getCart)
+router.get('/get-cart',jwtMiddle,cartController.getCart)
 router.post('/update-cart',jwtMiddle,cartController.updateCart)
 
 
