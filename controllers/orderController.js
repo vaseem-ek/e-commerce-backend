@@ -2,9 +2,9 @@ const orders = require('../models/orderModel')
 const users = require('../models/userModel')
 const Stripe = require('stripe')
 
-// const currency = "usd"
-// const deliveryCharges = 10
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const currency = "usd"
+const deliveryCharges = 10
+const stripe =new Stripe(process.env.STRIPE_SECRET_KEY)
 
 exports.placeOrder = async (req, res) => {
     try {
@@ -37,46 +37,52 @@ exports.placeOrder = async (req, res) => {
 
 exports.placeOrderStripe = async (req, res) => {
     try {
-        // const userId = req.payload
-        // const { items, amount, address } = req.body
-        // const { origin } = req.headers
+        const userId = req.payload
+        const { items, amount, address } = req.body
+        const { origin } = req.headers
 
-        // const orderData = {
-        //     userId,
-        //     items,
-        //     amount,
-        //     address,
-        //     paymentMethod: "Stripe",
-        //     payment: false,
-        //     date: Date.now()
-        // }
-        // const newOrder = new orders(orderData)
-        // await newOrder.save()
+        const orderData = {
+            userId,
+            items,
+            amount,
+            address,
+            paymentMethod: "Stripe",
+            payment: false,
+            date: Date.now()
+        }
+        const newOrder = new orders(orderData)
+        await newOrder.save()
 
-        // const line_items = items.map((item) => ({
-        //     price_data: {
-        //         currency: currency,
-        //         product_data: {
-        //             name: item.name
-        //         },
-        //         unit_amount: item.price * 100
-        //     },
-        //     quantity: item.quantity
-        // }))
-        // line_items.push({
-        //     price_data: {
-        //         currency: currency,
-        //         product_data: {
-        //             name: "Delivery Charges"
-        //         },
-        //         unit_amount: deliveryCharges * 100
-        //     },
-        //     quantity: 1
-        // })
+        const line_items = items.map((item) => ({
+            price_data: {
+                currency: currency,
+                product_data: {
+                    name: item.name
+                },
+                unit_amount: item.price * 100
+            },
+            quantity: item.quantity
+        }))
+        line_items.push({
+            price_data: {
+                currency: currency,
+                product_data: {
+                    name: "Delivery Charges"
+                },
+                unit_amount: deliveryCharges * 100
+            },
+            quantity: 1
+        })
 
-        // const session = await stripe.checkout.sessions.create({
+        const session = await stripe.checkout.sessions.create({
+            success_url:`${origin}/verify?success=true$orderId=${newOrder._id}`,
+            cancel_url:`${origin}/verify?success=false$orderId=${newOrder._id}`,
+            line_items,
+            mode:'payment'
+        })
 
-        // })
+        return res.status(200).json({success:true,success_url:session.url})
+
 
 
     } catch (error) {
