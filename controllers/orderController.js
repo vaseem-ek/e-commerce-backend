@@ -2,7 +2,7 @@ const orders = require('../models/orderModel')
 const users = require('../models/userModel')
 const Stripe = require('stripe')
 
-const currency = "usd"
+const currency = "inr"
 const deliveryCharges = 10
 const stripe =new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -75,13 +75,14 @@ exports.placeOrderStripe = async (req, res) => {
         })
 
         const session = await stripe.checkout.sessions.create({
-            success_url:`${origin}/verify?success=true$orderId=${newOrder._id}`,
-            cancel_url:`${origin}/verify?success=false$orderId=${newOrder._id}`,
+            success_url:`${origin}/verify?success=true&orderId=${newOrder._id}`,
+            
+            cancel_url:`${origin}/verify?success=false&orderId=${newOrder._id}`,
             line_items,
             mode:'payment'
         })
 
-        return res.status(200).json({success:true,success_url:session.url})
+        return res.status(200).json({success:true,session_url:session.url})
 
 
 
@@ -91,6 +92,26 @@ exports.placeOrderStripe = async (req, res) => {
     }
 }
 
+
+
+exports.verifyStripe=async(req,res)=>{
+    try {
+        const userId=req.payload
+        const {orderId,success}=req.body
+        if(success=="true"){
+            await orders.findByIdAndUpdate(orderId,{payment:true})
+            await users.findByIdAndUpdate(userId,{cartData:{}})
+            return res.status(200).json({success:true})
+        }else{
+            await orders.findByIdAndDelete(orderId)
+            return res.status(200).json({success:false})
+
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error" })   
+    }
+}
 
 exports.placeOrderRazorepay = async (req, res) => {
     try {

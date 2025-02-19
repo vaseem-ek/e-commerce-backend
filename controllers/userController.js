@@ -53,3 +53,15 @@ exports.loginUser = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
+
+exports.AllUsers=async(req,res)=>{
+    try {
+        const allUsers=await users.find()
+        return res.status(200).json({ success: false, allUsers })
+
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: true, message: "Internal server error" })
+    }
+}
