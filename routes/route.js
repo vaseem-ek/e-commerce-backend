@@ -5,6 +5,7 @@ const multer=require('../middlewares/multer')
 const jwtMiddle=require('../middlewares/jwtMiddle')
 const cartController=require('../controllers/cartController')
 const orderController=require('../controllers/orderController')
+const heroController=require('../controllers/heroController')
 
 
 const router=express.Router()
@@ -31,6 +32,8 @@ router.post('/stripe',jwtMiddle,orderController.placeOrderStripe)
 router.post('/razorpay',jwtMiddle,orderController.placeOrderRazorepay)
 router.get('/userorders',jwtMiddle,orderController.orderUser)
 router.post('/verify',jwtMiddle,orderController.verifyStripe)
+
+router.post('/addHero',multer.single('picture'),heroController.addHero)
 
 
 module.exports=router

@@ -57,7 +57,7 @@ exports.loginUser = async (req, res) => {
 exports.AllUsers=async(req,res)=>{
     try {
         const allUsers=await users.find()
-        return res.status(200).json({ success: false, allUsers })
+        return res.status(200).json({ success: true, allUsers })
 
         
     } catch (error) {
