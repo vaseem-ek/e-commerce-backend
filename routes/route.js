@@ -32,6 +32,7 @@ router.post('/stripe',jwtMiddle,orderController.placeOrderStripe)
 router.post('/razorpay',jwtMiddle,orderController.placeOrderRazorepay)
 router.get('/userorders',jwtMiddle,orderController.orderUser)
 router.post('/verify',jwtMiddle,orderController.verifyStripe)
+router.delete('/orders/:sid',jwtMiddle,orderController.deleteOrder)
 
 router.post('/addHero',multer.single('picture'),heroController.addHero)
 

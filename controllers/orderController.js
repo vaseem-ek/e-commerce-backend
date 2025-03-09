@@ -161,4 +161,16 @@ exports.updateStatus = async (req, res) => {
     }
 }
 
+exports.deleteOrder=async(req,res)=>{
+    try {
+        const {sid}=req.params
+        await orders.findByIdAndDelete(sid)
+        return res.status(200).json({success:true,message:"order deleted"})
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Internal server error" })
+    }
+}
+
 
